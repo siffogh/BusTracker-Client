@@ -1,0 +1,112 @@
+var x;
+var active = 'bus-home';
+var contentString =  '<div class="scrollFix">'+ '<h3> Bus Informaiton </h3>'
++'<div id="bodyContent">'
++'<p>School: American University of Sharjah</p>'
++'<p>Phone Number: +971XXXXXXXXX </p>';
++'</div>' + '</div>'
+;
+
+var infowindow = new google.maps.InfoWindow({
+  content: contentString
+});
+function initialize() {
+  var mapOptions = {
+    center: {lat: 25.2150722, lng: 55.4097698},
+    zoom: 16
+  };
+
+  var map = new google.maps.Map(document.getElementById('bus-map'),
+    mapOptions);
+
+  // navigator.geolocation.getCurrentPosition(function(position){
+  //   var initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+  //   map.setCenter(initialLocation);
+
+  // });
+
+
+var userLatLng = new google.maps.LatLng(25.2150722,55.4097698);
+
+var marker = new google.maps.Marker({
+  position: userLatLng,
+  title: 'Your Location',
+  map: map,
+  icon: 'img/bus.png'
+});
+
+
+google.maps.event.addListener(marker, 'click', function() {
+  infowindow.open(map,marker);
+});
+
+var polyOptions = {
+  strokeColor: '#FF0000',
+  strokeOpacity: 3.0,
+  strokeWeight: 3
+};
+poly = new google.maps.Polyline(polyOptions);
+poly.setMap(map);
+var clat, clng;
+setInterval(function(){
+  $.get("http:ec2-54-148-134-208.us-west-2.compute.amazonaws.com:8001/get", function(data){
+    if(data.lat > 0 && ( (clat != data.lat) || (clng != data.longi) ) )
+      {
+        moveBus(data.lat,data.longi);
+        clat = data.lat;
+        clng = data.longi;
+      }
+  })
+}, 1000);
+
+
+
+function moveBus(lat,lng) {
+  temp = new google.maps.LatLng(lat,lng);
+  marker.setPosition(temp);
+  map.panTo(temp);
+  poly.getPath().push(new google.maps.LatLng(lat,lng));
+}
+
+
+}
+var temp;
+var i = 0;
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+function activeTab(obj){
+  if(obj.id != active)
+  {
+    obj.className = 'tab-item active';
+    document.getElementById(active).className = 'tab-item';
+    active = obj.id;
+  }
+
+}
+
+function showSettings(){
+  document.getElementById('bus-settings-view').style.display = 'block';
+  document.getElementById('bus-map').style.display = 'none';
+  document.getElementById('bus-notifications-view').style.display = 'none';
+}
+
+function showNotifications(){
+  document.getElementById('bus-notifications-view').style.display = 'block';
+  document.getElementById('bus-map').style.display = 'none';
+  document.getElementById('bus-settings-view').style.display = 'none';
+}
+
+function showHome(){
+  document.getElementById('bus-settings-view').style.display = 'none';
+  document.getElementById('bus-map').style.display = 'block';
+  document.getElementById('bus-notifications-view').style.display = 'none';
+}
+
+function showDivider(divider){
+  var divider = document.getElementById(divider);
+  if(divider.style.display == 'none')
+    divider.style.display = 'block';
+  else
+    divider.style.display = 'none';
+}

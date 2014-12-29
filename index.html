@@ -1,0 +1,208 @@
+<!DOTCTYPE HTML>
+<html>
+<head>
+  <style type="text/css">
+  html, body, #map-canvas { height: 100%; margin: 0; padding: 0;}
+  </style>
+  <title>Bus Tracker</title>
+
+
+  <link href="css/ratchet.min.css" rel="stylesheet">
+  <link href="css/index.css" rel="stylesheet">
+  <link href="css/ratchet-theme-android.min.css" rel="stylesheet">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div id='main-page'>
+  <table>
+    <tr>
+      <th>
+        <button id='btn1' class="btn btn-primary btn-block" onclick='showClient();'>BusTracker</button>
+      </th>
+    </tr>
+    <tr>
+      <th>
+        <button id='btn2' class="btn btn-positive btn-block" onclick='showBus()'>BusDriver</button>
+      </th>
+    </tr>
+
+  </table>
+</div>
+
+<div id='client-page'>
+
+
+  <nav class="bar bar-tab">
+    <a  id='client-home' class="tab-item active" onclick='showClientHome();activeTab(this)' href="#">
+      <span class="icon icon-home"></span>
+      <span class="tab-label">Home</span>
+    </a>
+
+    <a id='client-notif' class="tab-item" onclick='showClientNotifications();activeTab(this)' href="#">
+      <span class='glyphicon glyphicon-bullhorn' style='font-size:20px'></span><br>
+      <span class="tab-label" style='font-size:11px'>Notifications</span>
+    </a>
+    <a id='client-settings' class="tab-item" onclick='showClientSettings();activeTab(this);' href="#">
+      <span class="icon icon-gear"></span>
+      <span class="tab-label">Settings</span>
+    </a>
+
+  </nav>
+
+
+  <div class='content'>
+    <div class="card">
+      <ul id='client-settings-view' class="table-view" style='display:none'>
+        <li class="table-view-cell media">
+          <a class="navigate-right">
+            <span class='media-object pull-left glyphicon glyphicon-time' style='font-size:25px;'></span>
+            <div class="media-body">
+              <div class="media-body">
+                Change when to be notified before Bus arrival
+              </div>
+            </div>
+          </a>
+        </li>
+        <li id='timeDivider' class="table-view-cell table-view-divider" style="font-family:arial; color:black;text-transform: lowercase; font-size:15px; font-weight:plain;">
+          <form>
+            <table cellspacing="30">
+              <tr>
+                <th class='tb'><input class='ttn-input' type="checkbox" value='2 min' onclick='changeTtn(this)'> <span> 2 Min </span> </th>
+                <th class='tb'><input class='ttn-input' type="checkbox" value='5 min' onclick='changeTtn(this)'> <span> 5 Min </span> </th>
+                <th class='tb'><input class='ttn-input' type="checkbox" value='10 min'onclick='changeTtn(this)'> <span> 10 Min </span> </th>
+              </tr>
+            </table>
+          </form>
+        </li>
+
+        <li class="table-view-cell media">
+          <a class="navigate-right">
+            <span class='media-object pull-left glyphicon glyphicon-map-marker' style='font-size:25px;'></span>
+            <div class="media-body">
+              <div class="media-body">
+                Edit Location:
+              </div>
+            </div>
+          </a>
+        </li>
+
+        <li id='addressDivider' class='table-view-cell table-view-divider'>
+          <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+          <div id='location-map'></div>
+        </li>
+      </ul>
+    </div>
+
+    <ul id='client-notifications-view' class="table-view">
+      <li class="table-view-cell media">
+        <a class="navigate-right">
+          <img class="img media-object pull-left" src="img/arrive.jpg">
+          <div class="media-body">
+            The Bus is arriving in 5 min
+            <p>12/8/2014</p>
+          </div>
+        </a>
+      </li>
+      <li class="table-view-cell media">
+        <a class="navigate-right">
+          <img class="img media-object pull-left" src="img/left.jpg">
+          <div class="media-body">
+            The Bus just left the school
+            <p>12/8/2014</p>
+          </div>
+        </a>
+      </li>
+    </ul>
+    <div id="client-map"></div>
+  </div>
+</div>
+
+<div id='bus-page'>
+
+  <nav class="bar bar-tab">
+    <a  id='bus-home' class="tab-item active" onclick='showBusHome();activeTab(this)' href="#">
+      <span class="icon icon-home"></span>
+      <span class="tab-label">Home</span>
+    </a>
+
+    <a id='bus-notif' class="tab-item" onclick='showBusDelay();activeTab(this)' href="#">
+      <span class=' glyphicon glyphicon-bell' style='font-size:20px'></span><br>
+      <span class="tab-label" style='font-size:11px'>Delay</span>
+    </a>
+
+  </nav>
+
+
+  <div class='content'>
+    <div class="card">
+      <ul id='bus-settings-view' class="table-view" style='display:none'>
+        <li class="table-view-cell media" onclick='showDivider("timeDivider")'>
+          <a class="navigate-right">
+            <span class='media-object pull-left glyphicon glyphicon-time' style='font-size:25px;'></span>
+            <div class="media-body">
+              <div class="media-body">
+                Change when to be notified before Bus arrival
+              </div>
+            </div>
+          </a>
+        </li>
+        <li id='timeDivider' class="table-view-cell table-view-divider" style="font-family:arial; color:black;text-transform: lowercase; font-size:15px; font-weight:plain;">
+          <form>
+            <table cellspacing="30">
+              <tr>
+                <th class='tb'><input type="checkbox"> <span> 2 Min </span> </th>
+                <th class='tb'><input type="checkbox"> <span> 5 Min </span> </th>
+                <th class='tb'><input type="checkbox"> <span> 10 Min </span> </th>
+              </tr>
+            </table>
+          </form>
+        </li>
+
+        <li class="table-view-cell media">
+          <a class="navigate-right">
+            <span class='media-object pull-left glyphicon glyphicon-map-marker' style='font-size:25px;'></span>
+            <div class="media-body">
+              <div class="media-body">
+                Edit Location:
+              </div>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <ul id='bus-notifications-view' class="table-view">
+      <li class="table-view-cell media">
+        <a class="navigate-right">
+          <img class="img media-object pull-left" src="img/arrive.jpg">
+          <div class="media-body">
+            The Bus is arriving in 5 min
+            <p>12/8/2014</p>
+          </div>
+        </a>
+      </li>
+      <li class="table-view-cell media">
+        <a class="navigate-right">
+          <img class="img media-object pull-left" src="img/left.jpg">
+          <div class="media-body">
+            The Bus just left the school
+            <p>12/8/2014</p>
+          </div>
+        </a>
+      </li>
+    </ul>
+    <div id="bus-map"></div>
+  </div>
+</div>
+</body>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBAE3UxHeR9BfcYj5TFJAs3owwE9M6baq0"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
+<script src="js/jquery/jquery.js"></script>
+<script type="text/javascript" src="js/client.js"></script>
+<script type="text/javascript" src="js/bus.js"></script>
+<script>
+var test = 12;
+</script>
+</html>
