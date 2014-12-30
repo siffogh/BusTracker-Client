@@ -1,4 +1,12 @@
 ///*********************************************************************************///
+///**************************** Initialization  ************************************///
+///*********************************************************************************///
+
+getNotifications(); //We get notifications when application is launched to avoid delay
+var isNotifChecked = false; //To check if the user checked his latest notifications
+
+
+///*********************************************************************************///
 ///********************** Map-Configuration & Request-Data *************************///
 ///*********************************************************************************///
 var contentString =  '<div class="scrollFix">'+ '<h3> Bus Informaiton </h3>'
@@ -143,6 +151,47 @@ function initializeLocationMap(){
 
 }
 
+///*********************************************************************************///
+///******************************* Get-Notifications********************************///
+///*********************************************************************************///
+
+function getNotifications(){   //  Get request to the server in order to get notifications
+
+var cnt = 0;   //The counter is added to check if there are any unchecked notifications so that they will be updated in the server to checked
+var badge = document.getElementById('notif-badge');
+document.getElementById('client-notifications-view').innerHTML = '<span class="waiting-dots">...</span>'; // while data are not ready put nothing
+$.get('http://localhost:8001/getNotifications', function(data){
+  var cl,html='';
+  data.notifications.forEach(function(notification,index){
+    if (notification.checked)
+        cl = 'checked';
+    else
+    {
+      cl = 'unchecked';
+      cnt++;
+    }
+        
+    var str = "<li class='"+cl+" table-view-cell media'><a class='navigate-right'><img class='img media-object pull-left' src='img/"+notification.content.img+"'><div class='media-body'>"+notification.content.text+"<p>"+moment(notification.date).format('MMMM Do YYYY, h:mm:ss a')+"</p></div></a></li>";
+    html += str;
+  });
+  document.getElementById('client-notifications-view').innerHTML = html;
+  if(cnt > 0)
+  {
+    badge.innerHTML = '1'; badge.style.display = 'inline';
+  }
+  else
+    badge.style.display = 'none';
+
+     
+});
+
+
+
+}
+
+
+
+
 
 
 ///*********************************************************************************///
@@ -166,6 +215,11 @@ function showClientSettings(){
   document.getElementById('client-map').style.display = 'none';
   document.getElementById('client-notifications-view').style.display = 'none';
   initializeLocationMap();
+  if(!isNotifChecked)
+  {
+    uncheckNotifs();
+    isNotifChecked = true; 
+  }
 }
 
 function showClientNotifications(){
@@ -174,10 +228,24 @@ function showClientNotifications(){
   document.getElementById('client-settings-view').style.display = 'none';
 }
 
+function uncheckNotifs(){
+  document.getElementById('notif-badge').style.display = 'none';
+  var els = document.getElementsByClassName("unchecked");
+  Array.prototype.forEach.call(els, function(el) {
+    el.className = 'checked table-view-cell media';
+  });
+  $.get('http://localhost:8001/checkNotifications',function(data){});
+}
+
 function showClientHome(){
   document.getElementById('client-settings-view').style.display = 'none';
   document.getElementById('client-map').style.display = 'block';
   document.getElementById('client-notifications-view').style.display = 'none';
+    if(!isNotifChecked)
+  {
+    uncheckNotifs();
+    isNotifChecked = true; 
+  }
 }
 
 function showDivider(divider){

@@ -41,7 +41,7 @@
     </a>
 
     <a id='client-notif' class="tab-item" onclick='showClientNotifications();activeTab(this)' href="#">
-      <span class='glyphicon glyphicon-bullhorn' style='font-size:20px'></span><br>
+      <span class='glyphicon glyphicon-bullhorn' style='font-size:20px'></span><span id='notif-badge' class="badge"></span><br>
       <span class="tab-label" style='font-size:11px'>Notifications</span>
     </a>
     <a id='client-settings' class="tab-item" onclick='showClientSettings();activeTab(this);' href="#">
@@ -96,24 +96,7 @@
     </div>
 
     <ul id='client-notifications-view' class="table-view">
-      <li class="table-view-cell media">
-        <a class="navigate-right">
-          <img class="img media-object pull-left" src="img/arrive.jpg">
-          <div class="media-body">
-            The Bus is arriving in 5 min
-            <p>12/8/2014</p>
-          </div>
-        </a>
-      </li>
-      <li class="table-view-cell media">
-        <a class="navigate-right">
-          <img class="img media-object pull-left" src="img/left.jpg">
-          <div class="media-body">
-            The Bus just left the school
-            <p>12/8/2014</p>
-          </div>
-        </a>
-      </li>
+
     </ul>
     <div id="client-map"></div>
   </div>
@@ -200,9 +183,7 @@
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBAE3UxHeR9BfcYj5TFJAs3owwE9M6baq0"></script>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
 <script src="js/jquery/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
 <script type="text/javascript" src="js/client.js"></script>
 <script type="text/javascript" src="js/bus.js"></script>
-<script>
-var test = 12;
-</script>
 </html>
